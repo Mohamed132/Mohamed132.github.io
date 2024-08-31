@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Stroke Timer</title>
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif; /* Sci-Fi font */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #0d1b2a; /* Dark bluish background */
+            margin: 0;
+            gap: 40px; /* Increased gap for more spacing */
+            color: #00aaff; /* Bluish neon text color */
+            overflow: hidden;
+        }
+
+        .header-container {
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #00aaff;
+            text-shadow: 0 0 5px #0077cc;
+        }
+
+        .name-score-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .score {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .hearts {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #ff6666;
+            text-shadow: 0 0 5px #ff6666;
+        }
+
+        /* Circular Timer */
+        .timer-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+        }
+
+        .circle-background {
+            fill: none;
+            stroke: #1b263b;
+            stroke-width: 5; /* Reduced stroke width */
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: #00aaff;
+            stroke-width: 5; /* Reduced stroke width */
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        /* Circular Slider Styles */
+        .picker-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #00aaff;
+            border-radius: 50%; /* Make the container circular */
+            background-color: #1b263b; /* Dark background */
+            font-size: 24px;
+            color: #ffffff; /* White text */
+            text-shadow: 0 0 5px #0077cc; /* Subtle glow on text */
+            user-select: none;
+            cursor: pointer;
+            box-shadow: 0px 0px 15px rgba(0, 170, 255, 0.4); /* Subtle bluish glow */
+            transform: translate(-50%, -50%); /* Center the slider inside the timer */
+            z-index: 2; /* Ensure the slider is above the timer */
+        }
+
+        /* Triangle Animation */
+        @keyframes triangleMoveUp {
+            0% { transform: translate(-50%, -10px); } /* Start from mid-way up */
+            50% { transform: translate(-50%, 0); }
+            100% { transform: translate(-50%, -10px); }
+        }
+
+        @keyframes triangleMoveDown {
+            0% { transform: translate(-50%, 10px); } /* Start from mid-way down */
+            50% { transform: translate(-50%, 0); }
+            100% { transform: translate(-50%, 10px); }
+        }
+
+        /* Triangle Above */
+        .triangle-up {
+            position: absolute;
+            top: -40px; /* Slightly move farther from the slider */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid #00aaff; /* Smaller bluish triangle */
+            animation: triangleMoveUp 1s infinite; /* Animation applied */
+        }
+
+        /* Triangle Below */
+        .triangle-down {
+            position: absolute;
+            bottom: -40px; /* Slightly move farther from the slider */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 12px solid #00aaff; /* Smaller bluish triangle */
+            animation: triangleMoveDown 1s infinite; /* Animation applied */
+        }
+
+        /* Button Grid Styles */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 60px); /* 5 columns */
+            grid-template-rows: repeat(5, 60px); /* 5 rows */
+            gap: 10px;
+        }
+
+        .grid-button {
+            width: 60px;
+            height: 60px;
+            background-color: #1b263b; /* Dark background */
+            border: 1px solid #00aaff;
+            border-radius: 5px;
+            font-size: 18px;
+            color: #ffffff; /* White text */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 0 0 5px #0077cc; /* Subtle glow on text */
+            box-shadow: 0px 0px 10px rgba(0, 170, 255, 0.4); /* Subtle bluish glow */
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .grid-button.green {
+            background-color: #00aaff; /* Bluish active state */
+            box-shadow: 0px 0px 15px #00aaff; /* Stronger glow when active */
+        }
+
+        .grid-button:hover {
+            background-color: #0077cc;
+            box-shadow: 0px 0px 15px #0077cc; /* Subtle glow on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Name and Score -->
+    <div class="header-container">
+        <div class="name-score-container">
+            <div id="userNameDisplay"></div>
+            <div class="score">Score: <span id="scoreField">0</span></div>
+        </div>
+        <div class="hearts">
+            &#x2764; &#x2764; &#x2764; <!-- Three heart symbols -->
+        </div>
+    </div>
+
+    <!-- Circular Stroke Line Timer with Slider Centered -->
+    <div class="timer-container">
+        <svg class="timer-svg" width="150" height="150" viewBox="0 0 100 100">
+            <circle class="circle-background" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-progress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="0"></circle>
+        </svg>
+        <!-- Circular Slider with Triangles -->
+        <div class="picker-container" id="numberPicker">
+            <div class="triangle-up"></div>
+            <span id="pickerText">Target</span> <!-- Initial text "Target" -->
+            <div class="triangle-down"></div>
+        </div>
+    </div>
+
+    <!-- Button Grid -->
+    <div class="grid-container" id="gridContainer"></div>
+
+    <script>
+       // document.addEventListener('DOMContentLoaded', function() {
+         //   const userName = localStorage.getItem('userName');
+         //   if (userName) {
+         //       document.getElementById('userNameDisplay').textContent = `Name: ${userName}`;
+          //  } else {
+          //      window.location.href = 'registration.html';
+           // }
+      //  });
+
+        const circleProgress = document.querySelector('.circle-progress');
+        const totalDuration = 20; // Timer duration in seconds
+        const radius = 45; // Radius of the circle
+        const circumference = 2 * Math.PI * radius; // Circumference of the circle
+        let currentTime = totalDuration;
+
+        circleProgress.style.strokeDasharray = circumference;
+        circleProgress.style.strokeDashoffset = 0;
+
+        function startTimer() {
+            const interval = setInterval(() => {
+                currentTime -= 0.1; // Reduce time by 0.1 seconds
+                const offset = circumference - (currentTime / totalDuration) * circumference;
+                circleProgress.style.strokeDashoffset = offset;
+
+                if (currentTime <= 0) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        currentTime = totalDuration;
+                        circleProgress.style.strokeDashoffset = 0;
+                        startTimer();
+                    }, 1000);
+                }
+            }, 100); // Update every 100ms for smoother animation
+        }
+
+        // Start the timer on page load
+        startTimer();
+
+        // Initialize buttons and attach click handlers
+        const gridContainer = document.getElementById('gridContainer');
+        for (let i = 1; i <= 25; i++) { // 25 buttons now
+            let button = document.createElement('button');
+            button.className = 'grid-button';
+            button.textContent = i;
+
+            button.addEventListener('click', function() {
+                // Remove the green class from all buttons
+                resetButtons();
+
+                // Add the green class to the clicked button
+                button.classList.add('green');
+
+                // Update the score (example)
+                score = 1; // Only one button can be selected, so score is 1
+                scoreField.textContent = score;
+            });
+
+            gridContainer.appendChild(button);
+        }
+
+        function resetButtons() {
+            const buttons = document.querySelectorAll('.grid-button');
+            buttons.forEach(button => button.classList.remove('green'));
+        }
+
+        // Slider Script
+        let sliderCurrentNumber = 1;
+        let startY;
+        let isDragging = false;
+
+        const pickerContainer = document.getElementById('numberPicker');
+        const pickerText = document.getElementById('pickerText');
+
+        pickerContainer.addEventListener('mousedown', function(event) {
+            startY = event.clientY;
+            isDragging = true;
+        });
+
+        document.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                let deltaY = startY - event.clientY;
+
+                if (deltaY > 5) { // Dragging up
+                    sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); // Set max to 20
+                    startY = event.clientY;
+                    pickerText.textContent = sliderCurrentNumber; // Update text to number
+                } else if (deltaY < -5) { // Dragging down
+                    sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); // Set min to 1
+                    startY = event.clientY;
+                    pickerText.textContent = sliderCurrentNumber; // Update text to number
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        document.addEventListener('mouseleave', function() {
+            isDragging = false;
+        });
+
+        // For touch devices
+        pickerContainer.addEventListener('touchstart', function(event) {
+            startY = event.touches[0].clientY;
+            isDragging = true;
+        });
+
+        document.addEventListener('touchmove', function(event) {
+            if (isDragging) {
+                let deltaY = startY - event.touches[0].clientY;
+
+                if (deltaY > 5) { // Dragging up
+                    sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); // Set max to 20
+                    startY = event.touches[0].clientY;
+                    pickerText.textContent = sliderCurrentNumber; // Update text to number
+                } else if (deltaY < -5) { // Dragging down
+                    sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); // Set min to 1
+                    startY = event.touches[0].clientY;
+                    pickerText.textContent = sliderCurrentNumber; // Update text to number
+                }
+            }
+        });
+
+        document.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
