@@ -6,25 +6,26 @@
     <title>Circular Stroke Timer</title>
     <style>
         body {
-            font-family: 'Orbitron', sans-serif; /* Sci-Fi font */
+            font-family: 'Orbitron', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #0d1b2a; /* Dark bluish background */
+            background-color: #0d1b2a;
             margin: 0;
-            gap: 40px; /* Increased gap for more spacing */
-            color: #00aaff; /* Bluish neon text color */
+            gap: 20px;
+            color: #00aaff;
             overflow: hidden;
         }
 
         .header-container {
-            width: 340px;
+            width: 100%;
+            max-width: 340px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #00aaff;
             text-shadow: 0 0 5px #0077cc;
         }
@@ -33,25 +34,26 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
         }
 
         .score {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
         }
 
         .hearts {
-            margin-top: 20px;
-            font-size: 24px;
+            margin-top: 5px;
+            font-size: 20px;
             color: #ff6666;
             text-shadow: 0 0 5px #ff6666;
         }
 
-        /* Circular Timer */
         .timer-container {
             position: relative;
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
         }
 
         .timer-svg {
@@ -61,157 +63,108 @@
         .circle-background {
             fill: none;
             stroke: #1b263b;
-            stroke-width: 5; /* Reduced stroke width */
+            stroke-width: 5;
         }
 
         .circle-progress {
             fill: none;
             stroke: #00aaff;
-            stroke-width: 5; /* Reduced stroke width */
+            stroke-width: 5;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.1s linear;
         }
 
-        /* Circular Slider Styles */
         .picker-container {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 2px solid #00aaff;
-            border-radius: 50%; /* Make the container circular */
-            background-color: #1b263b; /* Dark background */
-            font-size: 24px;
-            color: #ffffff; /* White text */
-            text-shadow: 0 0 5px #0077cc; /* Subtle glow on text */
+            border-radius: 50%;
+            background-color: #1b263b;
+            font-size: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 5px #0077cc;
             user-select: none;
             cursor: pointer;
-            box-shadow: 0px 0px 15px rgba(0, 170, 255, 0.4); /* Subtle bluish glow */
-            transform: translate(-50%, -50%); /* Center the slider inside the timer */
-            z-index: 2; /* Ensure the slider is above the timer */
+            box-shadow: 0px 0px 15px rgba(0, 170, 255, 0.4);
+            transform: translate(-50%, -50%);
+            z-index: 2;
         }
 
-        /* Triangle Animation */
-        @keyframes triangleMoveUp {
-            0% { transform: translate(-50%, -10px); } /* Start from mid-way up */
-            50% { transform: translate(-50%, 0); }
-            100% { transform: translate(-50%, -10px); }
-        }
-
-        @keyframes triangleMoveDown {
-            0% { transform: translate(-50%, 10px); } /* Start from mid-way down */
-            50% { transform: translate(-50%, 0); }
-            100% { transform: translate(-50%, 10px); }
-        }
-
-        /* Triangle Above */
-        .triangle-up {
-            position: absolute;
-            top: -40px; /* Slightly move farther from the slider */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 12px solid #00aaff; /* Smaller bluish triangle */
-            animation: triangleMoveUp 1s infinite; /* Animation applied */
-        }
-
-        /* Triangle Below */
-        .triangle-down {
-            position: absolute;
-            bottom: -40px; /* Slightly move farther from the slider */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 12px solid #00aaff; /* Smaller bluish triangle */
-            animation: triangleMoveDown 1s infinite; /* Animation applied */
-        }
-
-        /* Button Grid Styles */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 60px); /* 5 columns */
-            grid-template-rows: repeat(5, 60px); /* 5 rows */
-            gap: 10px;
+            grid-template-columns: repeat(5, 1fr); /* 5 columns */
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
         }
 
         .grid-button {
-            width: 60px;
-            height: 60px;
-            background-color: #1b263b; /* Dark background */
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            background-color: #1b263b;
             border: 1px solid #00aaff;
             border-radius: 5px;
-            font-size: 18px;
-            color: #ffffff; /* White text */
+            font-size: 16px;
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            text-shadow: 0 0 5px #0077cc; /* Subtle glow on text */
-            box-shadow: 0px 0px 10px rgba(0, 170, 255, 0.4); /* Subtle bluish glow */
+            text-shadow: 0 0 5px #0077cc;
+            box-shadow: 0px 0px 10px rgba(0, 170, 255, 0.4);
             transition: background-color 0.3s, box-shadow 0.3s;
         }
 
+        .grid-button span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .grid-button.green {
-            background-color: #00aaff; /* Bluish active state */
-            box-shadow: 0px 0px 15px #00aaff; /* Stronger glow when active */
+            background-color: #00aaff;
+            box-shadow: 0px 0px 15px #00aaff;
         }
 
         .grid-button:hover {
             background-color: #0077cc;
-            box-shadow: 0px 0px 15px #0077cc; /* Subtle glow on hover */
+            box-shadow: 0px 0px 15px #0077cc;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header with Name and Score -->
     <div class="header-container">
         <div class="name-score-container">
-            <div id="userNameDisplay"></div>
+            <div id="userNameDisplay">Name: User</div>
             <div class="score">Score: <span id="scoreField">0</span></div>
         </div>
         <div class="hearts">
-            &#x2764; &#x2764; &#x2764; <!-- Three heart symbols -->
+            &#x2764; &#x2764; &#x2764;
         </div>
     </div>
 
-    <!-- Circular Stroke Line Timer with Slider Centered -->
     <div class="timer-container">
-        <svg class="timer-svg" width="150" height="150" viewBox="0 0 100 100">
+        <svg class="timer-svg" width="120" height="120" viewBox="0 0 100 100">
             <circle class="circle-background" cx="50" cy="50" r="45"></circle>
             <circle class="circle-progress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="0"></circle>
         </svg>
-        <!-- Circular Slider with Triangles -->
         <div class="picker-container" id="numberPicker">
-            <div class="triangle-up"></div>
-            <span id="pickerText">Target</span> <!-- Initial text "Target" -->
-            <div class="triangle-down"></div>
+            <span id="pickerText">1</span>
         </div>
     </div>
 
-    <!-- Button Grid -->
     <div class="grid-container" id="gridContainer"></div>
 
     <script>
-       // document.addEventListener('DOMContentLoaded', function() {
-         //   const userName = localStorage.getItem('userName');
-         //   if (userName) {
-         //       document.getElementById('userNameDisplay').textContent = `Name: ${userName}`;
-          //  } else {
-          //      window.location.href = 'registration.html';
-           // }
-      //  });
-
         const circleProgress = document.querySelector('.circle-progress');
         const totalDuration = 20; // Timer duration in seconds
         const radius = 45; // Radius of the circle
@@ -238,26 +191,20 @@
             }, 100); // Update every 100ms for smoother animation
         }
 
-        // Start the timer on page load
         startTimer();
 
-        // Initialize buttons and attach click handlers
         const gridContainer = document.getElementById('gridContainer');
-        for (let i = 1; i <= 25; i++) { // 25 buttons now
+        const scoreField = document.getElementById('scoreField');
+
+        for (let i = 1; i <= 20; i++) { // Create 20 buttons in a 5x4 grid
             let button = document.createElement('button');
             button.className = 'grid-button';
-            button.textContent = i;
+            button.innerHTML = `<span>${i}</span>`;
 
             button.addEventListener('click', function() {
-                // Remove the green class from all buttons
                 resetButtons();
-
-                // Add the green class to the clicked button
                 button.classList.add('green');
-
-                // Update the score (example)
-                score = 1; // Only one button can be selected, so score is 1
-                scoreField.textContent = score;
+                scoreField.textContent = i; // Update score with the selected number
             });
 
             gridContainer.appendChild(button);
@@ -268,7 +215,6 @@
             buttons.forEach(button => button.classList.remove('green'));
         }
 
-        // Slider Script
         let sliderCurrentNumber = 1;
         let startY;
         let isDragging = false;
@@ -285,14 +231,14 @@
             if (isDragging) {
                 let deltaY = startY - event.clientY;
 
-                if (deltaY > 5) { // Dragging up
-                    sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); // Set max to 20
+                if (deltaY > 5) { 
+                    sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); 
                     startY = event.clientY;
-                    pickerText.textContent = sliderCurrentNumber; // Update text to number
-                } else if (deltaY < -5) { // Dragging down
-                    sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); // Set min to 1
+                    pickerText.textContent = sliderCurrentNumber;
+                } else if (deltaY < -5) { 
+                    sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); 
                     startY = event.clientY;
-                    pickerText.textContent = sliderCurrentNumber; // Update text to number
+                    pickerText.textContent = sliderCurrentNumber;
                 }
             }
         });
@@ -305,7 +251,6 @@
             isDragging = false;
         });
 
-        // For touch devices
         pickerContainer.addEventListener('touchstart', function(event) {
             startY = event.touches[0].clientY;
             isDragging = true;
@@ -315,14 +260,14 @@
             if (isDragging) {
                 let deltaY = startY - event.touches[0].clientY;
 
-                if (deltaY > 5) { // Dragging up
-                    sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); // Set max to 20
+                if (deltaY > 5) { 
+                    sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); 
                     startY = event.touches[0].clientY;
-                    pickerText.textContent = sliderCurrentNumber; // Update text to number
-                } else if (deltaY < -5) { // Dragging down
-                    sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); // Set min to 1
+                    pickerText.textContent = sliderCurrentNumber;
+                } else if (deltaY < -5) { 
+                    sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); 
                     startY = event.touches[0].clientY;
-                    pickerText.textContent = sliderCurrentNumber; // Update text to number
+                    pickerText.textContent = sliderCurrentNumber;
                 }
             }
         });
