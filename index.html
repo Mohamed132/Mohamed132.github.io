@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circular Stroke Timer</title>
+    <title>Circular Stroke Timer with Target</title>
     <style>
         body {
             font-family: 'Orbitron', sans-serif;
@@ -79,6 +79,11 @@
             stroke-width: 6;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .target-lines {
+            stroke: #00aaff;
+            stroke-width: 2;
         }
 
         .picker-container {
@@ -202,6 +207,12 @@
         <svg class="timer-svg" width="150" height="150" viewBox="0 0 100 100">
             <circle class="circle-background" cx="50" cy="50" r="45"></circle>
             <circle class="circle-progress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="0"></circle>
+            
+            <!-- Target Lines -->
+            <line class="target-lines" x1="50" y1="5" x2="50" y2="25"></line> <!-- Top line -->
+            <line class="target-lines" x1="50" y1="75" x2="50" y2="95"></line> <!-- Bottom line -->
+            <line class="target-lines" x1="5" y1="50" x2="25" y2="50"></line> <!-- Left line -->
+            <line class="target-lines" x1="75" y1="50" x2="95" y2="50"></line> <!-- Right line -->
         </svg>
         <div class="picker-container" id="numberPicker">
             <div class="triangle-up"></div>
