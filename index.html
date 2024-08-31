@@ -14,8 +14,8 @@
             height: 100vh;
             background-color: #0d1b2a;
             margin: 0;
-            padding-top: 20px; /* Added padding to move everything down */
-            gap: 30px;
+            padding-top: 30px; /* Added padding to move everything down */
+            gap: 40px; /* Increased gap for more spacing */
             color: #00aaff;
             overflow: hidden;
         }
@@ -26,7 +26,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px; /* Increased bottom margin */
             color: #00aaff;
             text-shadow: 0 0 5px #0077cc;
         }
@@ -58,9 +58,9 @@
 
         .timer-container {
             position: relative;
-            width: 120px;
-            height: 120px;
-            margin-bottom: 20px;
+            width: 150px; /* Increased size */
+            height: 150px; /* Increased size */
+            margin-bottom: 30px; /* Increased margin to push grid down */
         }
 
         .timer-svg {
@@ -70,13 +70,13 @@
         .circle-background {
             fill: none;
             stroke: #1b263b;
-            stroke-width: 5;
+            stroke-width: 6; /* Increased stroke width */
         }
 
         .circle-progress {
             fill: none;
             stroke: #00aaff;
-            stroke-width: 5;
+            stroke-width: 6; /* Increased stroke width */
             stroke-linecap: round;
             transition: stroke-dashoffset 0.1s linear;
         }
@@ -85,15 +85,15 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 80px;
-            height: 80px;
+            width: 100px; /* Increased size */
+            height: 100px; /* Increased size */
             display: flex;
             justify-content: center;
             align-items: center;
             border: 2px solid #00aaff;
             border-radius: 50%;
             background-color: #1b263b;
-            font-size: 20px;
+            font-size: 24px; /* Increased font size */
             color: #ffffff;
             text-shadow: 0 0 5px #0077cc;
             user-select: none;
@@ -108,20 +108,20 @@
             left: 50%;
             width: 0;
             height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
         }
 
         .triangle-up {
-            top: -40px;
-            border-bottom: 10px solid #00aaff;
+            top: -45px; /* Adjusted spacing from the slider */
+            border-bottom: 12px solid #00aaff;
             transform: translateX(-50%);
             animation: triangleMoveUp 1s infinite;
         }
 
         .triangle-down {
-            bottom: -40px;
-            border-top: 10px solid #00aaff;
+            bottom: -45px; /* Adjusted spacing from the slider */
+            border-top: 12px solid #00aaff;
             transform: translateX(-50%);
             animation: triangleMoveDown 1s infinite;
         }
@@ -141,7 +141,7 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            gap: 15px; /* Increased gap between buttons */
             width: 100%;
             max-width: 320px;
         }
@@ -153,7 +153,7 @@
             background-color: #1b263b;
             border: 1px solid #00aaff;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 18px; /* Increased font size */
             color: #ffffff;
             cursor: pointer;
             display: flex;
@@ -195,7 +195,7 @@
     </div>
 
     <div class="timer-container">
-        <svg class="timer-svg" width="120" height="120" viewBox="0 0 100 100">
+        <svg class="timer-svg" width="150" height="150" viewBox="0 0 100 100">
             <circle class="circle-background" cx="50" cy="50" r="45"></circle>
             <circle class="circle-progress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="0"></circle>
         </svg>
