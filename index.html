@@ -14,8 +14,8 @@
             height: 100vh;
             background-color: #0d1b2a;
             margin: 0;
-            padding-top: 30px; /* Added padding to move everything down */
-            gap: 40px; /* Increased gap for more spacing */
+            padding-top: 30px;
+            gap: 40px;
             color: #00aaff;
             overflow: hidden;
         }
@@ -26,7 +26,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 30px; /* Increased bottom margin */
+            margin-bottom: 30px;
             color: #00aaff;
             text-shadow: 0 0 5px #0077cc;
         }
@@ -58,9 +58,9 @@
 
         .timer-container {
             position: relative;
-            width: 150px; /* Increased size */
-            height: 150px; /* Increased size */
-            margin-bottom: 30px; /* Increased margin to push grid down */
+            width: 150px;
+            height: 150px;
+            margin-bottom: 30px;
         }
 
         .timer-svg {
@@ -70,13 +70,13 @@
         .circle-background {
             fill: none;
             stroke: #1b263b;
-            stroke-width: 6; /* Increased stroke width */
+            stroke-width: 6;
         }
 
         .circle-progress {
             fill: none;
             stroke: #00aaff;
-            stroke-width: 6; /* Increased stroke width */
+            stroke-width: 6;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.1s linear;
         }
@@ -85,15 +85,14 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100px; /* Increased size */
-            height: 100px; /* Increased size */
+            width: 100px;
+            height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 2px solid #00aaff;
             border-radius: 50%;
             background-color: #1b263b;
-            font-size: 24px; /* Increased font size */
             color: #ffffff;
             text-shadow: 0 0 5px #0077cc;
             user-select: none;
@@ -101,6 +100,11 @@
             box-shadow: 0px 0px 15px rgba(0, 170, 255, 0.4);
             transform: translate(-50%, -50%);
             z-index: 2;
+        }
+
+        .picker-container #pickerText {
+            font-size: 18px; /* Smaller font size for TARGET text */
+            transition: font-size 0.2s ease;
         }
 
         .triangle-up, .triangle-down {
@@ -113,14 +117,14 @@
         }
 
         .triangle-up {
-            top: -45px; /* Adjusted spacing from the slider */
+            top: -45px;
             border-bottom: 12px solid #00aaff;
             transform: translateX(-50%);
             animation: triangleMoveUp 1s infinite;
         }
 
         .triangle-down {
-            bottom: -45px; /* Adjusted spacing from the slider */
+            bottom: -45px;
             border-top: 12px solid #00aaff;
             transform: translateX(-50%);
             animation: triangleMoveDown 1s infinite;
@@ -141,7 +145,7 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px; /* Increased gap between buttons */
+            gap: 8px; /* Decreased gap between buttons */
             width: 100%;
             max-width: 320px;
         }
@@ -153,7 +157,7 @@
             background-color: #1b263b;
             border: 1px solid #00aaff;
             border-radius: 5px;
-            font-size: 18px; /* Increased font size */
+            font-size: 18px;
             color: #ffffff;
             cursor: pointer;
             display: flex;
@@ -201,7 +205,7 @@
         </svg>
         <div class="picker-container" id="numberPicker">
             <div class="triangle-up"></div>
-            <span id="pickerText">1</span>
+            <span id="pickerText">TARGET</span>
             <div class="triangle-down"></div>
         </div>
     </div>
@@ -229,6 +233,9 @@
                     setTimeout(() => {
                         currentTime = totalDuration;
                         circleProgress.style.strokeDashoffset = 0;
+                        const pickerText = document.getElementById('pickerText');
+                        pickerText.textContent = 'TARGET'; // Reset text to "TARGET"
+                        pickerText.style.fontSize = '18px'; // Smaller font size for "TARGET"
                         startTimer();
                     }, 1000);
                 }
@@ -277,12 +284,14 @@
 
                 if (deltaY > 5) { 
                     sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); 
-                    startY = event.clientY;
                     pickerText.textContent = sliderCurrentNumber;
+                    pickerText.style.fontSize = '24px'; // Increase font size for numbers
+                    startY = event.clientY; // Reset startY for smoother dragging
                 } else if (deltaY < -5) { 
                     sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); 
-                    startY = event.clientY;
                     pickerText.textContent = sliderCurrentNumber;
+                    pickerText.style.fontSize = '24px'; // Increase font size for numbers
+                    startY = event.clientY; // Reset startY for smoother dragging
                 }
             }
         });
@@ -306,12 +315,14 @@
 
                 if (deltaY > 5) { 
                     sliderCurrentNumber = Math.min(sliderCurrentNumber + 1, 20); 
-                    startY = event.touches[0].clientY;
                     pickerText.textContent = sliderCurrentNumber;
+                    pickerText.style.fontSize = '24px'; // Increase font size for numbers
+                    startY = event.touches[0].clientY; // Reset startY for smoother dragging
                 } else if (deltaY < -5) { 
                     sliderCurrentNumber = Math.max(sliderCurrentNumber - 1, 1); 
-                    startY = event.touches[0].clientY;
                     pickerText.textContent = sliderCurrentNumber;
+                    pickerText.style.fontSize = '24px'; // Increase font size for numbers
+                    startY = event.touches[0].clientY; // Reset startY for smoother dragging
                 }
             }
         });
