@@ -224,37 +224,28 @@
     <div class="grid-container" id="gridContainer"></div>
 
     <script>
+        const startTime = new Date('2024-08-30T12:00:00Z').getTime(); // UTC start time
+        const totalDuration = 20 * 1000; // Timer duration in milliseconds (20 seconds)
         const circleProgress = document.querySelector('.circle-progress');
-        const totalDuration = 20; // Timer duration in seconds
-        const radius = 45; // Radius of the circle
-        const circumference = 2 * Math.PI * radius; // Circumference of the circle
-        let currentTime = totalDuration;
-
+        const circumference = 2 * Math.PI * 45; // Circumference of the circle
         circleProgress.style.strokeDasharray = circumference;
-        circleProgress.style.strokeDashoffset = 0;
 
-        function startTimer() {
-            const interval = setInterval(() => {
-                currentTime -= 0.1; // Reduce time by 0.1 seconds
-                const offset = circumference - (currentTime / totalDuration) * circumference;
-                circleProgress.style.strokeDashoffset = offset;
+        function updateTimer() {
+            const currentTime = new Date().getTime();
+            const elapsedTime = currentTime - startTime;
+            const remainingTime = Math.max(0, totalDuration - (elapsedTime % totalDuration));
 
-                if (currentTime <= 0) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        currentTime = totalDuration;
-                        circleProgress.style.strokeDashoffset = 0;
-                        const pickerText = document.getElementById('pickerText');
-                        pickerText.textContent = 'TARGET'; // Reset text to "TARGET"
-                        pickerText.style.fontSize = '18px'; // Smaller font size for "TARGET"
-                        resetButtons(); // Reset the selected grid button
-                        startTimer();
-                    }, 1000);
-                }
-            }, 100); // Update every 100ms for smoother animation
+            const offset = circumference - (remainingTime / totalDuration) * circumference;
+            circleProgress.style.strokeDashoffset = offset;
+
+            if (remainingTime <= 100) {  // Reset just before the timer ends
+                resetButtonsAndSlider(); // Reset both buttons and slider
+            }
+
+            requestAnimationFrame(updateTimer);
         }
 
-        startTimer();
+        updateTimer(); // Start the timer
 
         const gridContainer = document.getElementById('gridContainer');
         const scoreField = document.getElementById('scoreField');
@@ -276,6 +267,13 @@
         function resetButtons() {
             const buttons = document.querySelectorAll('.grid-button');
             buttons.forEach(button => button.classList.remove('green'));
+        }
+
+        function resetButtonsAndSlider() {
+            resetButtons();
+            const pickerText = document.getElementById('pickerText');
+            pickerText.textContent = 'TARGET';
+            pickerText.style.fontSize = '18px'; // Smaller font size for TARGET
         }
 
         let sliderCurrentNumber = 1;
